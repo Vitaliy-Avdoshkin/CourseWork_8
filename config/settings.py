@@ -146,10 +146,10 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 CELERY_BEAT_SCHEDULE = {
-    "block_user": {
-        "task": "users.tasks.block_user",  # Путь к задаче
+    "send_reminder": {
+        "task": "habit.tasks.send_reminder",  # Путь к задаче
         "schedule": timedelta(
-            minutes=10
+            seconds=30
         ),  # Расписание выполнения задачи (например, каждые 10 минут)
     },
 }
@@ -166,3 +166,6 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
+
+TELEGRAM_URL = 'https://api.telegram.org/bot'
+BOT_TOKEN = os.getenv('BOT_TOKEN')
