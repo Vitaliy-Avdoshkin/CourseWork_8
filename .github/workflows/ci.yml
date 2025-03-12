@@ -1,4 +1,4 @@
-name: CorseWork_9
+name: Django CI
 
 on: [push]
 
@@ -6,79 +6,39 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 30q05q1986q
+          POSTGRES_DB: cw_8
+        ports:
+          - 5432:5432
+
     steps:
-    - name: Check out code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-    - name: Cache pip
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Set up environment variables
+        env:
+          DATABASE_URL: postgres://postgres:30q05q1986q@localhost:5432/cw_8
+          SECRET_KEY: django-insecure-tv_5anpssvxh+q%$bn*j*h*p$0p02$#b!k((k!l&!h8u*e54wy
+        run: |
+          echo "DATABASE_URL=$DATABASE_URL" >> $GITHUB_ENV
+          echo "SECRET_KEY=$SECRET_KEY" >> $GITHUB_ENV
 
-    - name: Set up PostgreSQL
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y postgresql-client
-        sudo service postgresql start
-        sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'rest_user_password';"
-        sudo -u postgres psql -c "CREATE DATABASE restdatabase;"
-        sudo -u postgres psql -c "CREATE ROLE runner WITH LOGIN PASSWORD 'rest_user_password';"
-        sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE restdatabase TO runner;"
-        sudo -u postgres psql -c "GRANT CREATE ON SCHEMA public TO runner;"
-        echo "DATABASE_URL=postgres://runner:rest_user_password@localhost/restdatabase" >> $GITHUB_ENV
+      - name: Apply migrations
+        run: python manage.py migrate
 
-    - name: Run migrate
-      run: |
-        export SECRET_KEY="${{ secrets.SECRET_KEY }}"
-        python manage.py migrate
-
-    - name: Run tests
-      env:
-        DATABASE_URL: sqlite:///:memory:
-      run: |
-        export SECRET_KEY="${{ secrets.SECRET_KEY }}"
-        python manage.py test
-
-#  deploy:
-#    runs-on: ubuntu-latest
-#    needs: test
-#
-#    steps:
-#      - name: Set up SSH
-#        uses: webfactory/ssh-agent@v0.9.0
-#        with:
-#          ssh-private-key: ${{ secrets.SSH_KEY }}
-#
-#      - name: Join to server
-#        run: |
-#          ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}
-#
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Deploy to Server
-#        run: |
-#          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-#          cd ~
-#          git clone git@github.com:Vitaliy-Avdoshkin/HomeWork_8.git
-#          cd HomeWork_8
-#          git switch feature/hw_9_35.2 && \
-#          python3 -m venv venv && \
-#          source venv/bin/activate && \
-#          git pull && \
-#          pip install -r requirements.txt && \
-#          sudo systemctl restart nginx
-#          EOF
+      - name: Run tests
+        run: python manage.py test
