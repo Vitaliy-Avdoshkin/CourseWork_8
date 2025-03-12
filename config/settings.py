@@ -83,17 +83,9 @@ DATABASES = {
         "PASSWORD": os.getenv("PASSWORD"),
         "HOST": os.getenv("HOST"),
         "PORT": os.getenv("PORT"),
-        "TEST": {
-            "NAME": "test_cw9",
-            "USER": os.getenv("USER"),
-            "PASSWORD": os.getenv("PASSWORD"),
-            "HOST": os.getenv("HOST"),
-            "PORT": os.getenv("PORT"),
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-        },
     },
 }
-print(DATABASES["default"])
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
