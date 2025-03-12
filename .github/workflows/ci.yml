@@ -46,6 +46,8 @@ jobs:
         python manage.py migrate
 
     - name: Run tests
+      env:
+        DATABASE_URL: sqlite:///:memory:
       run: |
         export SECRET_KEY="${{ secrets.SECRET_KEY }}"
         python manage.py test
