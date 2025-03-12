@@ -83,10 +83,15 @@ DATABASES = {
         "PASSWORD": os.getenv("PASSWORD"),
         "HOST": os.getenv("HOST"),
         "PORT": os.getenv("PORT"),
-        "TEST": {
-            "NAME": "test_mydatabase",
-        },
-    }
+    },
+    "test": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "test",
+        "USER": os.getenv("USER"),
+        "PASSWORD": os.getenv("PASSWORD"),
+        "HOST": os.getenv("HOST"),
+        "PORT": os.getenv("PORT"),
+    },
 }
 
 
