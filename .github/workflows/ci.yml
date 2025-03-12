@@ -1,4 +1,4 @@
-name: Django CI
+name: HomeWork_8
 
 on: [push]
 
@@ -6,40 +6,50 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: 30q05q1986q
-          POSTGRES_DB: cw_8
-        ports:
-          - 5432:5432
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Check out code
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+    - name: Cache pip
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
-      - name: Set up environment variables
-        env:
-          DATABASE_URL: postgres://postgres:30q05q1986q@localhost:5432/cw_8
-          SECRET_KEY: django-insecure-tv_5anpssvxh+q%$bn*j*h*p$0p02$#b!k((k!l&!h8u*e54wy
-        run: |
-          echo "DATABASE_URL=$DATABASE_URL" >> $GITHUB_ENV
-          echo "SECRET_KEY=$SECRET_KEY" >> $GITHUB_ENV
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-      - name: Apply migrations
-        run: python manage.py migrate
+    - name: Set up PostgreSQL
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client
+        sudo service postgresql start
+        sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'rest_user_password';"
+        sudo -u postgres psql -c "CREATE DATABASE restdatabase;"
+        sudo -u postgres psql -c "CREATE ROLE runner WITH LOGIN PASSWORD 'rest_user_password';"
+        sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE restdatabase TO runner;"
+        sudo -u postgres psql -c "GRANT CREATE ON SCHEMA public TO runner;"
+        echo "DATABASE_URL=postgres://runner:rest_user_password@localhost/restdatabase" >> $GITHUB_ENV
 
-      - name: Run tests
-        run: python manage.py test
+    - name: Set up environment variables
+      env:
+        DATABASE_URL: postgres://postgres:30q05q1986q@localhost:5432/cw_8
+        SECRET_KEY: django-insecure-tv_5anpssvxh+q%$bn*j*h*p$0p02$#b!k((k!l&!h8u*e54wy
+      run: |
+        echo "DATABASE_URL=$DATABASE_URL" >> $GITHUB_ENV
+        echo "SECRET_KEY=$SECRET_KEY" >> $GITHUB_ENV
+
+    - name: Apply migrations
+      run: python manage.py migrate
+
+    - name: Run tests
+      run: python manage.py test
