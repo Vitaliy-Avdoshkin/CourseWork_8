@@ -5,9 +5,7 @@ on: [push]
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      TEST_DATABASE_PREFIX: test_
-      DATABASE_NAME: cw_8
+
 
     steps:
     - name: Check out code
