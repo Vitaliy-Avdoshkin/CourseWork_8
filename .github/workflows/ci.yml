@@ -1,4 +1,4 @@
-name: CourseWork_91
+name: CourseWork_9
 
 on: [push, pull_request]
 
