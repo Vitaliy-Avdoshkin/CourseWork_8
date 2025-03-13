@@ -111,11 +111,11 @@ jobs:
           
           
           
-          cd ~
-          rm -rf CourseWork_8
-          git clone git@github.com:Vitaliy-Avdoshkin/CourseWork_8.git
-          cd CourseWork_8
-          docker system prune -af
-          docker volume prune -f
-          docker-compose up -d --build
-          EOF
+            cd ~
+            rm -rf CourseWork_8
+            git clone git@github.com:Vitaliy-Avdoshkin/CourseWork_8.git
+            cd CourseWork_8
+            docker system prune -af
+            docker volume prune -f
+            docker-compose up -d --build
+            EOF
