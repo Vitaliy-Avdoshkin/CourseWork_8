@@ -105,6 +105,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           cd ~
+          rm -rf CourseWork_8
           git clone git@github.com:Vitaliy-Avdoshkin/CourseWork_8.git
           cd CourseWork_8
           docker system prune -af 
