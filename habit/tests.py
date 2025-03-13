@@ -92,7 +92,7 @@ class HabitTestCase(APITestCase):
 
         response = self.client.get(url)
         data = response.json()
-        print(data)
+        # print(data)
         result = {
             "count": 1,
             "next": None,
