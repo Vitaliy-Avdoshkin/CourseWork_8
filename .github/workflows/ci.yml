@@ -76,13 +76,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Log in to Docker Hub
-        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u wioswa --password-stdin
+        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t wioswa/cw_9:${{ github.sha }} .
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/cw_9:${{ github.sha }} .
 
       - name: Push Docker image in Docker Hub
-        run: docker push wioswa/cw_9:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/cw_9:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -97,10 +97,10 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          docker pull wioswa/cw_9:${{ github.sha }}
+          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/cw_9:${{ github.sha }}
             docker stop cw_9 || true
             docker rm cw_9 || true
-            docker run -d --name cw_9 -p 80:8000 wioswa/cw_9:${{ github.sha }}
+            docker run -d --name cw_9 -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/cw_9:${{ github.sha }}
           EOF
 
 #          cd ~
