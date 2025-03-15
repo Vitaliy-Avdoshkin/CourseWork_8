@@ -69,7 +69,7 @@ pip install redis
 django-admin startproject config .
 ````
 
-## LMS-система:
+## Трекер привычек:
 
 7. Создайте приложения habit и users
 ````
