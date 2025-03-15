@@ -90,22 +90,12 @@ python manage.py startapp users
 13. Запуск селери и воркер : celery -A config worker --beat --scheduler django --loglevel=info
 14. Как запускать с докер из консоли: Ввести команду для сборки образов и запуска контейнеров: docker-compose up -d —build
 
-## Запуск локально
-1. Клонируйте репозиторий
-2. Создайте и заполните файл .env согласно шаблону .env.example
-3. Соберите и запустите контейнеры
-4. ```
-   docker-compose up --build
-   ```
-5. Примените миграции. Откройте новый терминал (или командную строку) и выполните:
+## Запуск и остановка проекта через Docker:
 ```
-docker-compose exec web python manage.py migrate
+docker-compose up -d --build
+docker compose down
 ```
-6. Создайте суперпользователя (опционально):
-```
-docker-compose exec web python manage.py createsuperuser
-```
-Теперь проект должен быть доступен по адресу http://localhost:8000/
+
 
 ## Настройка удаленного сервера
 1. Сервер настроен для развертывания веб-приложения.
