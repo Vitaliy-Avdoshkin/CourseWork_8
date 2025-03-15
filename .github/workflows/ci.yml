@@ -1,6 +1,6 @@
 name: CourseWork_9
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   lint:
