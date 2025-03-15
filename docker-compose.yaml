@@ -1,4 +1,4 @@
-#version: "3"
+version: "3"
 
 services:
 
@@ -16,8 +16,7 @@ services:
       - '8000:8000'
 #    depends_on:
 #      db:
-#        condition: service_healthy
-    volumes:
+#        condition: service_healthy    volumes:
       - .:/app
     env_file:
       - .env
@@ -47,6 +46,7 @@ services:
       timeout: 10s
 
 
+
   celery:
     build: .
     tty: true
@@ -74,4 +74,3 @@ services:
       - app
     env_file:
       - .env
-      -
