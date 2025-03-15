@@ -44,7 +44,7 @@ class Habit(models.Model):
         verbose_name="Периодичность",
         help_text="Укажите кол-во дней, за которые необходимо выполнить привычку (по умолчанию раз в день)",
     )
-    reward = models.CharField(verbose_name="Вознаграждение", **NULLABLE)
+    reward = models.CharField(max_length=50, verbose_name="Вознаграждение", **NULLABLE)
 
     is_published = models.BooleanField(
         default=True, verbose_name="Признак публичности", **NULLABLE
