@@ -61,31 +61,29 @@ jobs:
 
 
   deploy:
-    needs: build
     runs-on: ubuntu-latest
+    needs: test
 
     steps:
       - name: Set up SSH
-        run: |
-          sudo apt-get install -y sshpass  # Установка sshpass
-          echo "${{ secrets.SSH_PASSWORD }}" > password.txt  # Сохранение пароля во временный файл
-          chmod 600 password.txt  # Установка прав доступа к файлу
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
 
-      - name: Add SSH host key
+      - name: Join to server
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}
 
-      - name: Copy project files to server
-        run: |
-          sshpass -f password.txt rsync -avz --exclude '__pycache__' . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Deploy to Server
         run: |
-          sshpass -f password.txt ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           cd ~
           git clone git@github.com:Vitaliy-Avdoshkin/CourseWork_8.git
           cd CourseWork_8
+          git switch feature/cw_9 && \
           docker system prune -af 
           docker volume prune -f 
           docker-compose up -d --build
