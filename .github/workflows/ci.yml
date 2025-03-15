@@ -78,7 +78,7 @@ jobs:
 
       - name: Copy project files to server
         run: |
-          sshpass -f password.txt rsync -avz --exclude '__pycache__' . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_DIR }}
+          sshpass -f password.txt rsync -avz --exclude '__pycache__' . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}
 
       - name: Deploy to Server
         run: |
