@@ -2,9 +2,11 @@ name: CourseWork_9
 
 on:
   push:
-    branches: [origin/feature/cw_9]
+    branches:
+    - origin/feature/cw_9
   pull_request:
-    branches: [origin/develop]
+    branches:
+    - origin/develop
 
 
 
