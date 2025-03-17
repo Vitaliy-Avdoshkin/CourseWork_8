@@ -18,7 +18,7 @@ services:
 
 
   db:
-    image: postgres:16-alpine
+    image: postgres:16
     restart: on-failure
     env_file:
       - .env
@@ -26,10 +26,13 @@ services:
       - "5432"
     volumes:
       - .pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "$PASSWORD"
     healthcheck:
-      test: ["CMD-SHELL", "-c", "pg_isready -U $USER -d $NAME"]
+      test: ["CMD-SHELL", "pg_isready -U $USER"]
       interval: 10s
-      retries: 5
+      timeout: 10s
+      retries: 10
 
   app:
     build: .
@@ -48,7 +51,7 @@ services:
   celery:
     build: .
     tty: true
-    command: celery -A config worker --loglevel=info
+    command: celery -A config
     restart: on-failure
     volumes:
       - .:/app
@@ -62,7 +65,7 @@ services:
   celery-beat:
     build: .
     tty: true
-    command: celery -A config beat --loglevel=info
+    command: celery -A config beat
     restart: on-failure
     volumes:
       - .:/app
