@@ -1,20 +1,30 @@
-version: '3.12'
+version: "3.12"
 
 services:
-
-  nginx:
-    build: .
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./html:/usr/share/nginx/html
 
   redis:
     image: redis:latest
     restart: on-failure
+    expose:
+      - "6379"
+
+  app:
+    build: .
+    tty: true
+    command: sh -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
     ports:
-      - "6379:6379"
+      - '8000:8000'
+    env_file:
+      - .env
+
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - static_volume:/app/staticfiles
 
 
   db:
@@ -24,29 +34,13 @@ services:
       - .env
     expose:
       - "5432"
-    volumes:
-      - .pg_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: "$PASSWORD"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $USER"]
-      interval: 10s
+      test: ["CMD-SHELL", "-c", "pg_isready -U $USER -d $NAME"]
+      interval: 30s
+      retries: 5
       timeout: 10s
-      retries: 10
-
-  app:
-    build: .
-    tty: true
-    ports:
-      - '8000:8000'
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - .:/app
-    env_file:
-      - .env
 
   celery:
     build: .
@@ -75,7 +69,3 @@ services:
       - app
     env_file:
       - .env
-
-volumes:
-  pg_data:
-  static_volume:
