@@ -133,7 +133,7 @@ jobs:
           
           
           docker image prune -af
-          docker volume prune
+          docker volume prune -af
           sudo kill -9 $(sudo lsof -t -i :80)
           sudo kill -9 $(sudo lsof -t -i :8080)
 
