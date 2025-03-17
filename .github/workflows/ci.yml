@@ -119,19 +119,19 @@ jobs:
           cd CourseWork_8
           git fetch --all
           git switch feature/cw_9 
-          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
-          echo "DEBUG=True" >> .env
-          echo "NAME=cw_8" >> .env
-          echo "USER=postgres" >> .env
-          echo "PASSWORD=30q05q1986q" >> .env
-          echo "HOST=localhost" >> .env
-          echo "PORT=5432" >> .env
-          
-          echo "BOT_TOKEN=7494508680:AAFOHB-8xk97yfxfZf-jwFgjRczNIAP87to" >> .env
+#          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+#          echo "DEBUG=True" >> .env
+#          echo "NAME=cw_8" >> .env
+#          echo "USER=postgres" >> .env
+#          echo "PASSWORD=30q05q1986q" >> .env
+#          echo "HOST=localhost" >> .env
+#          echo "PORT=5432" >> .env
+#
+#          echo "BOT_TOKEN=7494508680:AAFOHB-8xk97yfxfZf-jwFgjRczNIAP87to" >> .env
           docker-compose down
           
           
-          
+          docker system prune -af 
           docker image prune -af
           docker volume prune -af
           sudo kill -9 $(sudo lsof -t -i :80)
