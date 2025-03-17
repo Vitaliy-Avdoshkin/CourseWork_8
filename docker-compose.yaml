@@ -1,50 +1,54 @@
-version: "3.12"
+version: '3.12'
 
 services:
+
+  nginx:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./html:/usr/share/nginx/html
 
   redis:
     image: redis:latest
     restart: on-failure
-    expose:
-      - "6379"
-
-  app:
-    build: .
-    tty: true
-    command: sh -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
     ports:
-      - '8000:8000'
-    env_file:
-      - .env
+      - "6379:6379"
 
-  nginx:
-    build:
-      context: ./nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - static_volume:/app/staticfiles
-    depends_on:
-      - web
 
   db:
-    image: postgres:16
+    image: postgres:16-alpine
     restart: on-failure
     env_file:
       - .env
     expose:
       - "5432"
+    volumes:
+      - .pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "-c", "pg_isready -U $USER -d $NAME"]
-      interval: 30s
+      interval: 10s
       retries: 5
-      timeout: 10s
+
+  app:
+    build: .
+    tty: true
+    ports:
+      - '8000:8000'
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    env_file:
+      - .env
 
   celery:
     build: .
     tty: true
-    command: celery -A config
+    command: celery -A config worker --loglevel=info
     restart: on-failure
     volumes:
       - .:/app
@@ -58,7 +62,7 @@ services:
   celery-beat:
     build: .
     tty: true
-    command: celery -A config beat
+    command: celery -A config beat --loglevel=info
     restart: on-failure
     volumes:
       - .:/app
@@ -68,3 +72,7 @@ services:
       - app
     env_file:
       - .env
+
+volumes:
+  pg_data:
+  static_volume:
