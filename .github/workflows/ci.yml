@@ -81,11 +81,11 @@ jobs:
 
       - name: Build Docker image
 #        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/cw_9:${{ github.sha }} .
-        run: docker-compose build
+        run: docker compose build
 
       - name: Push Docker image in Docker Hub
 #        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/cw_9:${{ github.sha }}
-        run: docker-compose push
+        run: docker compose push
 
   deploy:
     runs-on: ubuntu-latest
