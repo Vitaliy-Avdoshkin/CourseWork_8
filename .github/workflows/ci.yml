@@ -128,16 +128,19 @@ jobs:
           echo "PORT=5432" >> .env
           
           echo "BOT_TOKEN=7494508680:AAFOHB-8xk97yfxfZf-jwFgjRczNIAP87to" >> .env
-          docker-compose down          
+          docker-compose down
+          
+          
+          
+          docker image prune -af
+          docker volume prune
+          sudo kill -9 $(sudo lsof -t -i :80)
+          sudo kill -9 $(sudo lsof -t -i :8080)
+
+          
           docker-compose pull
           docker-compose up -d --remove-orphans
           EOF
-
-#          docker container prune
-#          docker image prune -af
-#          docker volume prune
-#          sudo kill -9 $(sudo lsof -t -i :80)
-#          sudo kill -9 $(sudo lsof -t -i :8080)
           
           
           
