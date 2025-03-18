@@ -6,4 +6,4 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 COPY html/ /usr/share/nginx/html/
 
-EXPOSE 8888
+EXPOSE 8000
