@@ -5,8 +5,7 @@ services:
   redis:
     image: redis:latest
     restart: on-failure
-    volumes:
-      - redis_data:/data
+
     expose:
       - "6379"
     env_file:
@@ -78,4 +77,3 @@ services:
 volumes:
   postgres_data:
   static_volume:
-  redis_volume:
