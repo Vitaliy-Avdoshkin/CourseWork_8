@@ -134,8 +134,4 @@ jobs:
           
           docker-compose pull
           docker-compose up -d --remove-orphans
-          
-          sudo kill -9 $(sudo lsof -t -i :80)
-          sudo kill -9 $(sudo lsof -t -i :8080)
-          
           EOF
