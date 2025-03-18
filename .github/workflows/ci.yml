@@ -109,7 +109,7 @@ jobs:
         run: |
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           cd
-          sudo chown -R wioswa:wioswa CourseWork_8
+          sudo chown -R ${{ secrets.BOT_TOKEN }}:${{ secrets.BOT_TOKEN }} CourseWork_8
           rm -rf CourseWork_8/
           git clone git@github.com:Vitaliy-Avdoshkin/CourseWork_8.git
           cd CourseWork_8
