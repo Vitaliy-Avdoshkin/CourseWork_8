@@ -73,5 +73,3 @@ services:
       - static_volume:/nginx/staticfiles
     depends_on:
       - app
-    networks:
-      - cw_8
