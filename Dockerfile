@@ -17,6 +17,10 @@ RUN pip install poetry && \
 
 COPY . .
 
+# Создаем директорию для медиафайлов и статики
+RUN mkdir -p /habits/media
+RUN mkdir -p /habits/staticfiles && chmod -R 755 /habits/staticfiles
+
 # Открываем порт 8000 для взаимодействия с приложением
 EXPOSE 8000
 
