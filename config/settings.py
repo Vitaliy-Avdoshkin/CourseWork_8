@@ -177,7 +177,13 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 TELEGRAM_URL = "https://api.telegram.org/bot"
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# Настройки для CORS
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backend.redis.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+    }
+}
+
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
@@ -186,23 +192,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
 ]
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'level': 'DEBUG',
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'level': 'DEBUG',
-#             'handlers': ['console'],
-#         },
-#     },
-# }
 
 
 if "test" in sys.argv:
