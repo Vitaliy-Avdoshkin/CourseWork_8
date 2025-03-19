@@ -7,6 +7,9 @@ services:
     volumes:
       - .:/app
       - static_volume:/app/staticfiles
+    environment:
+      - POSTGRES_PASSWORD: "$PASSWORD"
+      - POSTGRES_NAME: "$NAME"
     expose:
       - '8000'
 #    depend_on:
