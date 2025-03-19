@@ -178,9 +178,12 @@ TELEGRAM_URL = "https://api.telegram.org/bot"
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backend.redis.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
     }
 }
 
