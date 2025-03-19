@@ -4,43 +4,36 @@ services:
 
   redis:
     image: redis:latest
-    volumes:
-      - redis_data:/data
-    env_file:
-      - ./.env
+    restart: on-failure
+    expose:
+      - "6379"
 
   app:
     build: .
-    command: sh -c "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
-    volumes:
-      - .:/app
-      - static_volume:/app/staticfiles
-    expose:
-      - "8000"
+    tty: true
+    command: sh -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    ports:
+      - '8000:8000'
     env_file:
-      - ./.env
+      - .env
 
   nginx:
-    build:
-      context: ./nginx
+    build: .
     ports:
       - "8888:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - static_volume:/app/staticfiles
-    depends_on:
-      - app
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./html:/usr/share/nginx/html
 
   db:
     image: postgres:16
+    restart: on-failure
     env_file:
       - .env
     expose:
       - "5432"
     environment:
       POSTGRES_PASSWORD: "$PASSWORD"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
     healthcheck:
       test: ["CMD-SHELL", "-c", "pg_isready -U $USER -d $NAME"]
       interval: 30s
@@ -74,9 +67,3 @@ services:
       - app
     env_file:
       - .env
-
-
-volumes:
-  postgres_data:
-  static_volume:
-  redis_data:
