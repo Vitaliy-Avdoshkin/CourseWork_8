@@ -16,6 +16,7 @@ ipython = "^8.32.0"
 gunicorn = "^23.0.0"
 django-redis = "^5.4.0"
 djangorestframework = "^3.15.2"
+djangorestframework-simplejwt = "^5.5.0"
 
 
 [tool.poetry.group.lint.dependencies]
