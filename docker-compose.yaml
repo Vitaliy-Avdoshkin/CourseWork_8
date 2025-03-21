@@ -11,17 +11,17 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_PASSWORD: 30q05q1986q
-      POSTGRES_NAME: cw_8
+      POSTGRES_PASSWORD: os.getenv("PASSWORD")
+      POSTGRES_NAME: os.getenv("NAME")
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - .env
-    healthcheck:
-      test: [ "CMD-SHELL", "-c", "pg_isready -U $USER -d $NAME" ]
-      interval: 30s
-      retries: 5
-      timeout: 10s
+#    healthcheck:
+#      test: [ "CMD-SHELL", "-c", "pg_isready -U $USER -d $NAME" ]
+#      interval: 30s
+#      retries: 5
+#      timeout: 10s
 
   app:
     build: .
@@ -42,31 +42,31 @@ services:
     env_file:
       - ./.env
 
-  celery:
-    build: .
-    tty: true
-    command: celery -A config
-    volumes:
-      - .:/app
-    depends_on:
-      - redis
-      - db
-      - app
-    env_file:
-      - .env
-
-  celery-beat:
-    build: .
-    tty: true
-    command: celery -A config beat
-    volumes:
-      - .:/app
-    depends_on:
-      - redis
-      - db
-      - app
-    env_file:
-      - .env
+#  celery:
+#    build: .
+#    tty: true
+#    command: celery -A config
+#    volumes:
+#      - .:/app
+#    depends_on:
+#      - redis
+#      - db
+#      - app
+#    env_file:
+#      - .env
+#
+#  celery-beat:
+#    build: .
+#    tty: true
+#    command: celery -A config beat
+#    volumes:
+#      - .:/app
+#    depends_on:
+#      - redis
+#      - db
+#      - app
+#    env_file:
+#      - .env
 
 volumes:
   postgres_data:
