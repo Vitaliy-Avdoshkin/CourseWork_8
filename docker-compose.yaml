@@ -47,7 +47,6 @@ services:
     build: .
     tty: true
     command: celery -A config
-    restart: on-failure
     volumes:
       - .:/app
     depends_on:
@@ -61,7 +60,6 @@ services:
     build: .
     tty: true
     command: celery -A config beat
-    restart: on-failure
     volumes:
       - .:/app
     depends_on:
