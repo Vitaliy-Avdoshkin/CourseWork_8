@@ -5,6 +5,8 @@ services:
       context: ./nginx
     ports:
       - "8888:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/app/staticfiles
@@ -50,7 +52,7 @@ services:
     container_name: celery
     build: .
     tty: true
-    command: sh -c "celery -A config --loglevel=info -B"
+    command: sh -c "celery -A config.celery worker --loglevel=info -B"
     volumes:
       - .:/app
     depends_on:
@@ -64,7 +66,7 @@ services:
     container_name: celery-beat
     build: .
     tty: true
-    command: sh -c "celery -A config beat --loglevel=info -B"
+    command: sh -c "celery -A config.celery beat --loglevel=INFO"
     volumes:
       - .:/app
     depends_on:
