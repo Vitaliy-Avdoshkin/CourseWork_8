@@ -50,7 +50,7 @@ services:
     container_name: celery
     build: .
     tty: true
-    command: celery -A config --loglevel=info
+    command: sh -c "celery -A config --loglevel=info -B"
     volumes:
       - .:/app
     depends_on:
@@ -64,7 +64,7 @@ services:
     container_name: celery-beat
     build: .
     tty: true
-    command: celery -A config beat --loglevel=info
+    command: sh -c "celery -A config beat --loglevel=info -B"
     volumes:
       - .:/app
     depends_on:
