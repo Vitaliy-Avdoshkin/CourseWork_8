@@ -1,5 +1,6 @@
 services:
   nginx:
+    container_name: nginx
     build:
       context: ./nginx
     ports:
@@ -9,6 +10,7 @@ services:
       - static_volume:/app/staticfiles
 
   db:
+    container_name: db
     image: postgres:16
     environment:
       POSTGRES_PASSWORD: "PASSWORD"
@@ -24,6 +26,7 @@ services:
       timeout: 10s
 
   web:
+    container_name: app
     build: .
     tty: true
     command: sh -c "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
@@ -36,6 +39,7 @@ services:
       - .env
 
   redis:
+    container_name: redis
     image: redis:7
     volumes:
       - redis_data:/data
@@ -43,6 +47,7 @@ services:
       - ./.env
 
   celery:
+    container_name: celery
     build: .
     tty: true
     command: celery -A config --loglevel=info
@@ -56,6 +61,7 @@ services:
       - .env
 
   celery-beat:
+    container_name: celery-beat
     build: .
     tty: true
     command: celery -A config beat --loglevel=info

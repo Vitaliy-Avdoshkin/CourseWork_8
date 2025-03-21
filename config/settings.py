@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["89.169.160.241", "127.0.0.1", "host.docker.internal", "localhost"]
 
 
 INSTALLED_APPS = [
@@ -194,6 +194,12 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:8000",
+    "http://89.169.160.241:80",
+    "http://127.0.0.1",
+    "http://127.0.0.1:8000",
+    "http://89.169.160.241:8000",
+    "host.docker.internal",
+    "localhost",
 ]
 
 
