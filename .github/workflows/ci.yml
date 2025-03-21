@@ -134,5 +134,4 @@ jobs:
           
           docker-compose pull
           docker-compose up -d --remove-orphans
-          sudo systemctl restart nginx
           EOF
