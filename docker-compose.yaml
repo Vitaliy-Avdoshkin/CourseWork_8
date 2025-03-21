@@ -23,7 +23,7 @@ services:
       retries: 5
       timeout: 10s
 
-  app:
+  web:
     build: .
     tty: true
     command: sh -c "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
@@ -42,31 +42,31 @@ services:
     env_file:
       - ./.env
 
-#  celery:
-#    build: .
-#    tty: true
-#    command: celery -A config
-#    volumes:
-#      - .:/app
-#    depends_on:
-#      - redis
-#      - db
-#      - app
-#    env_file:
-#      - .env
-#
-#  celery-beat:
-#    build: .
-#    tty: true
-#    command: celery -A config beat
-#    volumes:
-#      - .:/app
-#    depends_on:
-#      - redis
-#      - db
-#      - app
-#    env_file:
-#      - .env
+  celery:
+    build: .
+    tty: true
+    command: celery -A config --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - db
+      - web
+    env_file:
+      - .env
+
+  celery-beat:
+    build: .
+    tty: true
+    command: celery -A config beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - db
+      - web
+    env_file:
+      - .env
 
 volumes:
   postgres_data:
