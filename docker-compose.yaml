@@ -14,16 +14,14 @@ services:
   db:
     container_name: postgres
     image: postgres:16
-    env_file:
-      - .env
     environment:
       POSTGRES_PASSWORD: "POSTGRES_PASSWORD"
       POSTGRES_DB: "POSTGRES_DB"
-      POSTGRES_USER: "POSTGRES_USER"
-    ports:
-      - "5432:5432"
+      POSTRES_PORT: "POSTGRES_PORT"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
     networks:
       - habits_network
     healthcheck:
@@ -39,13 +37,11 @@ services:
     command: sh -c "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - .:/app
-      - static_volume:/app/static
-    ports:
-      - '8000:8000'
+      - static_volume:/app/staticfiles
+    expose:
+      - '8000'
     env_file:
       - .env
-    depends_on:
-      - db
     networks:
       - habits_network
 
@@ -65,7 +61,7 @@ services:
     container_name: celery
     build: .
     tty: true
-    command: celery -A config worker -l INFO -P eventlet
+    command: celery -A config worker --loglevel=info
     restart: on-failure
     volumes:
       - .:/app
@@ -82,20 +78,20 @@ services:
     container_name: celery_beat
     build: .
     tty: true
-    command: celery -A config beat -l INFO
+    command: celery -A config beat --loglevel=info
     restart: on-failure
-    env_file:
-      - .env
     environment:
       POSTGRES_PASSWORD: "POSTGRES_PASSWORD"
       POSTGRES_DB: "POSTGRES_DB"
-      POSTGRES_USER: "POSTGRES_USER"
+      POSTRES_USER: "POSTRES_USER"
     volumes:
       - .:/app
     depends_on:
       - redis
       - db
       - web
+    env_file:
+      - .env
     networks:
       - habits_network
 

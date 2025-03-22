@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['51.250.101.133', 'django', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['51.250.101.133', 'django', 'localhost', 'db', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = ['http://51.250.101.133']
 
