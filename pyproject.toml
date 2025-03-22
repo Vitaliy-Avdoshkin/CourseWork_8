@@ -22,6 +22,9 @@ django-celery-beat = "^2.7.0"
 django-cors-headers = "^4.7.0"
 django-filter = "^25.1"
 celery = "^5.4.0"
+eventlet = "^0.39.1"
+decouple = "^0.0.7"
+config = "^0.5.1"
 
 
 
