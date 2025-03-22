@@ -46,9 +46,6 @@ services:
       - .env
     depends_on:
       - db
-    environment:
-      - POSTGRES_HOST=db
-      - POSTGRES_PORT=5432
     networks:
       - habits_network
 
@@ -68,7 +65,7 @@ services:
     container_name: celery
     build: .
     tty: true
-    command: celery -A config worker --loglevel=info
+    command: celery -A config worker -l INFO -P eventlet
     restart: on-failure
     volumes:
       - .:/app
@@ -85,7 +82,7 @@ services:
     container_name: celery_beat
     build: .
     tty: true
-    command: celery -A config beat --loglevel=info
+    command: celery -A config beat -l INFO
     restart: on-failure
     env_file:
       - .env
